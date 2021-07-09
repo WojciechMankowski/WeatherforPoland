@@ -1,6 +1,7 @@
 .Analiza danych/
 .Folder z plikami z csv/
 ..mypy_cache/
+.idea
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
