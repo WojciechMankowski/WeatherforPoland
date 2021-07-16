@@ -3,7 +3,8 @@ from API import APIConnection
 from SaveInFille import SaveInDatabase
 import datetime
 
-def run2():
+
+def run_example():
     URL: str = "https://danepubliczne.imgw.pl/api/data/synop"
     api: APIConnection = APIConnection(URL)
     dane: list[dict[str, str]] = api.Connection()
@@ -22,4 +23,4 @@ def run2():
     if lastData == False:
         databese.save(data,dic)
 if __name__ == '__main__':
-    run2()
+    run_example()

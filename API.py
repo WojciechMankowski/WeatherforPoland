@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Union
 from requests import get
 from json import loads
+from Exception import DatabaseConnectionStatusException
 from CreateANewDate import Data
 import datetime
 
@@ -24,6 +25,8 @@ class APIConnection:
     def Connection(self) -> list[dict[str, str]]:
         responsy = get(self.url)
         status = responsy.status_code
+        if status != 200:
+            raise DatabaseConnectionStatusException()
         print(f"Status połączenia: {status}")
         data =loads(responsy.text)
         return data
@@ -58,18 +61,6 @@ class APIConnection:
 
         return Weather
 
-    # def ObjectData(self, data_str: str):
-    #     Year_re = re.compile(r'(\d{4})')
-    #     M_re = re.compile(r'-(\d{2})')
-    #     Hour_re = re.compile(r'(\d+):')
-    #     Minute_re = re.compile(r':(\d{2})')
-    #     Year= Year_re.match(data_str) # type: ignore
-    #     Year2= Year.group() # type: ignore
-    #     Year = int(Year2) # type: ignore
-    #     M = int(M_re.findall(data_str)[0])
-    #     Day = int(M_re.findall(data_str)[1])
-    #     Hour = int(Hour_re.findall(data_str)[0])
-    #     Minute = int(Minute_re.findall(data_str)[0])
-    #     datetime_object = datetime.datetime(year=Year, month=M, day=Day, hour=Hour,
-    #                                         minute=Minute, tzinfo=ZoneInfo('Europe/Warsaw'))
-    #     return datetime_object
+
+if __name__ == '__main__':
+    APIConnection("https://danepubliczne.imgw.pl/api/data/synop").Connection()

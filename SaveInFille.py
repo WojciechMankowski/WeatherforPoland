@@ -1,14 +1,10 @@
-import datetime
 from os import path
-from typing import Union, Any
-from dataclasses import dataclass
 import sqlite3
 
-@dataclass
 class SaveInDatabase:
 
     def Create(self, name_file: str)-> None:
-        con = sqlite3.connect(f'Databese\{name_file}.db')
+        con = sqlite3.connect(fr'Databese\{name_file}.db')
         cur = con.cursor()
         cur.execute(f'''CREATE TABLE Pogoda
                        (date text, Miasto text, Temperatura Integer, Opady Integer, Wilgodność Integer, Ciśnienie Integer)''')
@@ -23,7 +19,7 @@ class SaveInDatabase:
 
     def save(self, *args) -> None:
         data_file = args[0]
-        con = sqlite3.connect(f'Databese\{data_file}.db')
+        con = sqlite3.connect(fr'Databese\{data_file}.db')
         cur = con.cursor()
 
         data = args[1]
@@ -41,10 +37,10 @@ class SaveInDatabase:
             cur.execute(query, test)
         con.commit()
 
-    def CheckData(self, data_file: str, lastdate: datetime.datetime)-> bool:
+    def CheckData(self, data_file: str, lastdate: str)-> bool:
         print("Sprawdzam ostatnią datę")
         data = []
-        con = sqlite3.connect(f'Databese\{data_file}.db')
+        con = sqlite3.connect(fr'Databese\{data_file}.db')
         cur = con.cursor()
         test = cur.execute('SELECT * FROM Pogoda ')
         for item in test:
