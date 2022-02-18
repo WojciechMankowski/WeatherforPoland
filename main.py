@@ -1,14 +1,16 @@
-from zoneinfo import ZoneInfo
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from API import APIConnection
-import datetime
 from WeatherDatabase import WeatherData
+from dotenv import load_dotenv
+from os import getenv
+import datetime
 
-HOST="46.41.140.135"
-USER="wojtek"
-PASSWORD="Wojtek92!"
-DATABASE_NAME='Flask'
+load_dotenv()
+HOST=getenv("HOST")
+USER=getenv("USER")
+PASSWORD=getenv("PASSWORD")
+DATABASE_NAME=getenv("DATABASE_NAME")
 
 def Convert_str_to_datetime(data_in_api_str):
     format_datatime = "%Y-%m-%d %H:%M:00"
@@ -18,7 +20,6 @@ def Convert_str_to_datetime(data_in_api_str):
 
 def SaveInDataBase(data, date):
     text_connect = f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DATABASE_NAME}"
-    print(text_connect)
     engine = create_engine(text_connect)
     Session = sessionmaker()
     Session.configure(bind=engine)
@@ -31,7 +32,6 @@ def SaveInDataBase(data, date):
             session.add(newdata)
     session.commit()
     session.close()
-
 
 def run_example():
     URL: str = "https://danepubliczne.imgw.pl/api/data/synop"
