@@ -1,19 +1,15 @@
-from dataclasses import dataclass
+from pydantic import dataclasses
 from typing import Union
 from requests import get
 from json import loads
 from Exception import DatabaseConnectionStatusException
 from CreateANewDate import Data
 import datetime
+from typing import List
+from Data import DataPydantic
 
-@dataclass
 class APIConnection:
-    City: list[str]
-    Date: list[datetime.datetime]
-    Temperature: list[str]
-    Humidity: list[str]
-    Precipitation: list[str]
-    Pressure: list[str]
+
     def __init__(self, URL: str) -> None:
         self.url = URL
         self.City= []
@@ -22,21 +18,21 @@ class APIConnection:
         self.Humidity  = []
         self.Precipitation = []
         self.Pressure = []
+        self.DataSet: List[DataPydantic] = []
+
     def Connection(self) -> list[dict[str, str]]:
         responsy = get(self.url)
         status = responsy.status_code
         if status != 200:
             raise DatabaseConnectionStatusException()
-        print(f"Status połączenia: {status}")
         data =loads(responsy.text)
+
         return data
     def SelectionOfItems(self, data: list[dict[str, str]]):
         for row in data:
+
             data_str = f'{row["data_pomiaru"]} {row["godzina_pomiaru"]}:00' # type: ignore
             data = Data().ObjectData(data_str) # type: ignore
-            # print(type(data))
-            # data = int(data)
-            # data = data.toordinal()
             self.Date.append(data)  # type: ignore
             temperatura = row['temperatura']  # type: ignore
             self.Temperature.append(temperatura)
@@ -48,6 +44,11 @@ class APIConnection:
             self.Pressure.append(pressure)
             city = row['stacja'] # type: ignore
             self.City.append(city)
+            dataset = {'Date': data, 'City': city, 'Temp': temperatura,
+                       'Humidity': humidity, 'Precipitation': pressure, 'Pressure': pressure}
+            new_data = DataPydantic(**dataset)
+            self.DataSet.append(new_data)
+
     def CreateADictionaryForWriting(self) -> list[Union[list[str], list[datetime.datetime]]]:
 
         length = len(self.City)
@@ -60,7 +61,8 @@ class APIConnection:
         Weather.append(self.Pressure)
 
         return Weather
-
+    def getDataSet(self) -> List[DataPydantic]:
+        return self.DataSet
 
 if __name__ == '__main__':
     APIConnection("https://danepubliczne.imgw.pl/api/data/synop").Connection()

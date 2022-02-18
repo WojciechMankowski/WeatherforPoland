@@ -53,3 +53,7 @@ class SaveInDatabase:
             return True
         else:
             return False
+
+if __name__ == '__main__':
+    db = MySQL()
+    db.SaveInDataBase("test", "test", "test", "test", "test", "test")
