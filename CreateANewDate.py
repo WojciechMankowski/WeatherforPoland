@@ -16,5 +16,5 @@ class Data:
         Hour: int = int(Hour_re.findall(data_str)[0])
         Minute: int = 00
         datetime_object = datetime(year=Year_int, month=M, day=Day, hour=Hour,
-                                            minute=Minute, tzinfo=ZoneInfo('Europe/Warsaw')) # type: ignore
+                                            minute=Minute) # type: ignore
         return datetime_object

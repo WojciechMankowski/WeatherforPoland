@@ -1,4 +1,3 @@
-from pydantic import dataclasses
 from typing import Union
 from requests import get
 from json import loads
